@@ -24,7 +24,6 @@ A Raycast extension for tmux: cheatsheet + session manager + arbitrary command r
 ## Notes
 
 - Works with any tmux prefix key (default `Ctrl+b`, or remapped like `Ctrl+a`). The cheatsheet uses the abstract label `prefix`.
-- The Tmux Cheatsheet descriptions are bilingual (中文 + English).
 
 ## License
 

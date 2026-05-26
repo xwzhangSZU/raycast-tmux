@@ -13,7 +13,7 @@ export default function CheatsheetCommand() {
 
   return (
     <List
-      searchBarPlaceholder="搜 prefix / command / 中文关键字…"
+      searchBarPlaceholder="Search prefix / command / keyword…"
       isShowingDetail={false}
     >
       {grouped.map(({ section, items }) => (

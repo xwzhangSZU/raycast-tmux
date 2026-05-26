@@ -88,7 +88,7 @@ function EmptyState({ onChange }: { onChange: () => Promise<void> }) {
     <List.EmptyView
       icon={Icon.Terminal}
       title="No tmux sessions"
-      description="tmux server 没在跑。"
+      description="The tmux server is not running."
       actions={
         <ActionPanel>
           <Action.Push
@@ -283,11 +283,11 @@ function RenameForm({
   const submit = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      setError("名字不能空");
+      setError("Name cannot be empty");
       return;
     }
     if (/[\s:.]/.test(trimmed)) {
-      setError("名字不能含空格、冒号、点");
+      setError("Name cannot contain spaces, colons, or dots");
       return;
     }
     try {
@@ -344,11 +344,11 @@ function NewSessionForm({ onDone }: { onDone: () => Promise<void> }) {
   const submit = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      setNameError("名字不能空");
+      setNameError("Name cannot be empty");
       return;
     }
     if (/[\s:.]/.test(trimmed)) {
-      setNameError("名字不能含空格、冒号、点");
+      setNameError("Name cannot contain spaces, colons, or dots");
       return;
     }
     try {
@@ -397,7 +397,7 @@ function NewSessionForm({ onDone }: { onDone: () => Promise<void> }) {
         value={cwd}
         onChange={setCwd}
       />
-      <Form.Description text="新 session 以 detached 状态创建（-d）。完成后可用 Switch / Copy Attach 进入。" />
+      <Form.Description text="The new session is created detached (-d). Use Switch or Copy Attach Command afterwards to enter it." />
     </Form>
   );
 }

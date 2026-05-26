@@ -64,7 +64,7 @@ export function PanesView({ session }: { session: string }) {
         <List.EmptyView
           icon={Icon.AppWindow}
           title="No panes"
-          description={`session ${session} 没有 pane`}
+          description={`Session ${session} has no panes`}
         />
       )}
       {sortedGroups.map(([wi, group]) => (

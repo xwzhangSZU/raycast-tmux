@@ -131,7 +131,7 @@ export default function RunCommand() {
         onChange={setCmd}
         autoFocus
       />
-      <Form.Description text="输入会作为 `tmux <input>` 运行（通过 /bin/sh -c，所以引号、变量按 shell 解析）。" />
+      <Form.Description text="Input runs as `tmux <input>` via /bin/sh -c, so quotes and variables are parsed by the shell." />
       {history.length > 0 && (
         <Form.Description
           text={`Recent: ${history.slice(0, 5).join("  ·  ")}`}
