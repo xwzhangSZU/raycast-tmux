@@ -5,6 +5,7 @@ import {
   Clipboard,
   Color,
   Icon,
+  Keyboard,
   List,
   Toast,
   confirmAlert,
@@ -20,21 +21,36 @@ import {
   killPane,
   killWindow,
   markPane,
+  swapPanes,
   swapWithMarkedPane,
   switchToWindow,
 } from "../lib/tmux";
 import { toastError } from "../lib/ui";
+import { Direction, findNeighbor } from "../lib/layout";
 import { PaneDetail } from "./pane-detail";
 import { NewWindowForm, RenameWindowForm } from "./window-forms";
+
+const SWAP_DIRECTIONS: {
+  dir: Direction;
+  title: string;
+  key: Keyboard.KeyEquivalent;
+}[] = [
+  { dir: "left", title: "Swap Left", key: "arrowLeft" },
+  { dir: "right", title: "Swap Right", key: "arrowRight" },
+  { dir: "up", title: "Swap Up", key: "arrowUp" },
+  { dir: "down", title: "Swap Down", key: "arrowDown" },
+];
 
 export function PaneItem({
   pane,
   session,
+  windowPanes,
   hasMarkedElsewhere,
   onChange,
 }: {
   pane: TmuxPane;
   session: string;
+  windowPanes: TmuxPane[];
   hasMarkedElsewhere: boolean;
   onChange: () => Promise<void>;
 }) {
@@ -113,24 +129,31 @@ export function PaneItem({
             />
           </ActionPanel.Section>
 
-          <ActionPanel.Section>
-            <Action
-              title="Break to New Window"
-              icon={Icon.NewDocument}
-              shortcut={{ modifiers: ["cmd"], key: "b" }}
-              onAction={async () => {
-                try {
-                  await breakPane(pane.id);
-                  await showToast({
-                    style: Toast.Style.Success,
-                    title: `Broke ${pane.id} into new window`,
-                  });
-                  await onChange();
-                } catch (e) {
-                  await toastError("Break failed", e);
-                }
-              }}
-            />
+          <ActionPanel.Section title="Move / Swap">
+            {SWAP_DIRECTIONS.map(({ dir, title, key }) => {
+              const neighbor = findNeighbor(windowPanes, pane, dir);
+              if (!neighbor) return null;
+              return (
+                <Action
+                  key={dir}
+                  title={title}
+                  icon={Icon.Switch}
+                  shortcut={{ modifiers: ["ctrl", "opt"], key }}
+                  onAction={async () => {
+                    try {
+                      await swapPanes(pane.id, neighbor.id);
+                      await showToast({
+                        style: Toast.Style.Success,
+                        title: `Swapped ${pane.id} ${dir} with ${neighbor.id}`,
+                      });
+                      await onChange();
+                    } catch (e) {
+                      await toastError("Swap failed", e);
+                    }
+                  }}
+                />
+              );
+            })}
             {pane.marked ? (
               <Action
                 title="Unmark Pane"
@@ -187,6 +210,26 @@ export function PaneItem({
                 }}
               />
             )}
+          </ActionPanel.Section>
+
+          <ActionPanel.Section title="Pane">
+            <Action
+              title="Break to New Window"
+              icon={Icon.NewDocument}
+              shortcut={{ modifiers: ["cmd"], key: "b" }}
+              onAction={async () => {
+                try {
+                  await breakPane(pane.id);
+                  await showToast({
+                    style: Toast.Style.Success,
+                    title: `Broke ${pane.id} into new window`,
+                  });
+                  await onChange();
+                } catch (e) {
+                  await toastError("Break failed", e);
+                }
+              }}
+            />
             <Action
               title="Clear Pane History"
               icon={Icon.Eraser}

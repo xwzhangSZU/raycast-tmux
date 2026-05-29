@@ -71,6 +71,7 @@ export function PanesView({ session }: { session: string }) {
                 key={p.id}
                 pane={p}
                 session={session}
+                windowPanes={group.panes}
                 hasMarkedElsewhere={panes.some(
                   (q) => q.marked && q.id !== p.id,
                 )}
