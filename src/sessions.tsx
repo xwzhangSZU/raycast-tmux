@@ -186,8 +186,26 @@ function SessionActions({
   }, [session.id, session.name, onChange]);
 
   const handleKillOthers = useCallback(async () => {
+    let others: string[] = [];
+    try {
+      others = (await listSessions())
+        .map((s) => s.name)
+        .filter((n) => n !== session.name);
+    } catch {
+      // If listing fails, fall through to a generic confirmation below.
+    }
+    if (others.length === 0) {
+      await showToast({
+        style: Toast.Style.Success,
+        title: "No other sessions to kill",
+      });
+      return;
+    }
     const ok = await confirmAlert({
       title: `Kill all sessions except "${session.name}"?`,
+      message: `Will kill ${others.length} other session(s):\n${others
+        .map((n) => `• ${n}`)
+        .join("\n")}`,
       primaryAction: {
         title: "Kill Others",
         style: Alert.ActionStyle.Destructive,
