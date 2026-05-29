@@ -60,11 +60,12 @@ export default function RunCommand() {
     }
 
     // Destructive tmux commands (kill-session -a, kill-server, …) run via
-    // /bin/sh with no undo. Confirm first; for session-wide kills, list every
-    // session that would be affected so nothing gets wiped blindly.
-    if (/^(kill-server|kill-session|kill-window|kill-pane)\b/.test(trimmed)) {
+    // /bin/sh with no undo. Confirm first. Match any "kill…" command so tmux
+    // abbreviations and aliases (kill-ses, kill-serv, killp, killw) can't slip
+    // past the guard — every real tmux command starting with "kill" is a kill.
+    if (/^kill/i.test(trimmed)) {
       let detail = `tmux ${trimmed}`;
-      if (/^kill-(server|session)\b/.test(trimmed)) {
+      if (/^kill-s/i.test(trimmed)) {
         try {
           const all = await listSessions();
           if (all.length > 0) {
