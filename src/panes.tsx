@@ -31,6 +31,7 @@ import {
   swapWithMarkedPane,
   switchToWindow,
 } from "./lib/tmux";
+import { toastError } from "./lib/ui";
 
 export function PanesView({ session }: { session: string }) {
   const [panes, setPanes] = useState<TmuxPane[]>([]);
@@ -533,14 +534,6 @@ async function copyContent(paneId: string, command: string): Promise<void> {
   } catch (e) {
     await toastError("Capture failed", e);
   }
-}
-
-async function toastError(title: string, e: unknown): Promise<void> {
-  await showToast({
-    style: Toast.Style.Failure,
-    title,
-    message: e instanceof TmuxError ? e.stderr || e.message : String(e),
-  });
 }
 
 function RenameWindowForm({
