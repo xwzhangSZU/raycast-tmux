@@ -192,12 +192,16 @@ Everything works against any prefix key (default `Ctrl+b`, or remapped like `Ctr
 4. Press **Cmd+C** to copy the captured content (e.g. paste into another assistant for analysis).
 5. Press **Cmd+R** inside the Detail view to re-capture after the agent does more work.
 
-### 5. Rearrange panes without attaching
-1. On the **source** pane → press **Cmd+M** (Mark). The row gets a purple `MARKED` tag.
-2. Navigate to the **destination** pane.
-3. Press **Cmd+Shift+S** (Swap with Marked Pane). The layout swaps without ever leaving Raycast.
+### 5. Rearrange panes — even across sessions
+Mark + Swap is not limited to one window. Pane ids are global to the tmux server, so the **source** and **destination** can live in **different sessions** — letting you consolidate panes that started life apart, without attaching to either.
 
-> **Faster for adjacent panes:** skip the mark step — use **Swap Left / Right / Up / Down** on a pane to swap it with its neighbor in that direction in one step.
+1. On the **source** pane → press **Cmd+M** (Mark). The row gets a purple `MARKED` tag. It can be in any session.
+2. Navigate to the **destination** pane — same window, or a different session entirely (open that session's panes with **Cmd+B**).
+3. Press **Cmd+Shift+S** (Swap with Marked Pane). The two panes trade places; both processes keep running and the active pane never loses focus (`swap-pane … -d`). It's a swap, so it is instantly reversible.
+
+> **Vibe-coding use case — two agents, one window.** One coding agent is running in **Session A**, another in **Session B**, and you want them side by side. Open Session A's panes, **Mark** the agent pane (**Cmd+M**); open Session B's panes, land on the spare/idle pane, and **Swap with Marked Pane** (**Cmd+Shift+S**). Both agents now sit in Session B's window — left and right — and the idle shell you displaced lands harmlessly in Session A. Nothing is killed.
+
+> **Faster for adjacent panes:** skip the mark step — use **Swap Left / Right / Up / Down** on a pane to swap it with its neighbor in that direction in one step (same window only).
 
 ### 6. Promote a runaway pane into its own window
 1. On the pane that is monopolizing screen real estate → press **Cmd+B** (Break to New Window).
